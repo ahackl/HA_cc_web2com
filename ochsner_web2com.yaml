@@ -1,0 +1,34 @@
+  ip_address: 192.168.188.50
+  username: OEM
+  password: !secret web2com_password
+  sensors:
+  - name: Heizenergie Teil 1 MWh
+    scan_interval: 30
+    unique_id: web2com_HeizenergieTeil1MWh
+    id: /1/2/1/125/10
+    unit_of_measurement: MWh
+    device_class: "energy"
+  - name: Heizenergie Teil 2 kWh
+    scan_interval: 33
+    unique_id: web2com_HeizenergieTeilkWh
+    id: /1/2/1/125/9
+    unit_of_measurement: kWh
+    device_class: "energy"
+  - name: Warmwasserenergie Teil 1 MWh
+    scan_interval: 36
+    unique_id: web2com_WarmwasserenergieTeil1MWh
+    id: /1/2/1/125/12
+    unit_of_measurement: MWh
+    device_class: "energy"
+  - name: Warmwasserenergie Teil 2 kWh
+    scan_interval: 39
+    unique_id: web2com_WarmwasserenergieTeil2kWh
+    id: /1/2/1/125/11
+    unit_of_measurement: kWh
+    device_class: "energy"
+  - name: Aussentemperatur
+    scan_interval: 42
+    unique_id: web2com_Aussentemperatur
+    id: /1/2/4/119/1
+    unit_of_measurement: °C
+    device_class: "temperatur"
