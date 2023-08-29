@@ -3,6 +3,8 @@
 Home Assistant custom component for the web2com interface from ochsner.
 Use the python module [ochnser-web2com](https://pypi.org/project/ochsner-web2com/)
 
+This component is in an experimental stage.
+
 ## Installation
 
 Create a folder "web2com" in "custom_components".
@@ -12,6 +14,7 @@ Copy all files to this folder.
 custom_components/web2com/__init__.py
 custom_components/web2com/manifest.json
 custom_components/web2com/sensor.py
+custom_components/web2com/service.yaml
 ```
 
 Copy "ochsner_web2com.yaml" to your configuration folder.
@@ -41,6 +44,9 @@ sensors:
     unit_of_measurement: MWh
     device_class: "energy"
 ```
+
+One service is set up:
+    NormalSetpointRoomTemperature
 
 ## Paramter List:
 

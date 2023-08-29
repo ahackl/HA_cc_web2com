@@ -6,30 +6,31 @@ from homeassistant.core import HomeAssistant
 
 from pprint import pformat
 
+import ochsner_web2com.web2com as web2com
+
 
 DOMAIN = "web2com"
 
-ATTR_NAME = "name"
-DEFAULT_NAME = "World"
-
-_LOGGER = logging.getLogger("web2com")
+_LOGGER = logging.getLogger(DOMAIN)
 
 
 def setup(hass, config):
     """Set up is called when Home Assistant is loading our component."""
 
-
-    def handle_hello(call):
+    def handle_heating(call):
         """Handle the service call."""
-        name = call.data.get(ATTR_NAME, DEFAULT_NAME)
-        temperature = call.data.get("temperature", "0")
+        temperature = call.data.get("NormalSetpointRoomTemperature", "0")
+        # _LOGGER.info(pformat(temperature))
 
+        username = config[DOMAIN]["username"]
+        password = config[DOMAIN]["password"]
+        ip_address = config[DOMAIN]["ip_address"]
 
-        hass.states.set("web2com.hello", name)
+        w2c = web2com.Service(ip_address, username, password)
+        result = w2c.set_value("/1/2/4/99/6", temperature)
+        # _LOGGER.info(pformat(result))
 
-    # hass.services.register(DOMAIN, "hello", handle_hello)
-
-    # hass.data[DOMAIN] = {"temperature": 23}
+    hass.services.register(DOMAIN, "heating", handle_heating)
 
     sensors = config[DOMAIN]["sensors"]
     for optional in sensors:

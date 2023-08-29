@@ -1,7 +1,7 @@
 {
     "domain": "web2com",
     "name": "Ochsner web2com",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "codeowners": [],
     "dependencies": [],
     "documentation": "https://github.com/ahackl/HA_cc_web2com",

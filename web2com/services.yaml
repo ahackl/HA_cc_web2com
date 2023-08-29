@@ -1,0 +1,10 @@
+heating:
+  fields:
+    NormalSetpointRoomTemperature:
+      name: Normal Setpoint Room Temperature
+      description: New target temperature for room.
+      selector:
+        number:
+          min: 10
+          max: 30
+          unit_of_measurement: "°C"

@@ -32,3 +32,9 @@
     id: /1/2/4/119/1
     unit_of_measurement: °C
     device_class: "temperatur"
+  - name: Normal Raumtemperatur Heizbetrieb
+    scan_interval: 43
+    unique_id: web2com_NormalRaumtemperaturHeizbetrieb
+    id: /1/2/4/99/6
+    unit_of_measurement: °C
+    device_class: "temperatur"
