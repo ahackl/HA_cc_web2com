@@ -1,0 +1,36 @@
+- sensor:
+  - name: "Heizenergie"
+    unique_id: web2com_Heizenergie
+    device_class: "energy"
+    state_class: "total_increasing"
+    unit_of_measurement: kWh
+    state: >
+        {% if is_state('sensor.Heizenergie_Teil_2_kWh', 'unknown') %}
+          {% set hpkwh = 0.0 %}
+        {% else %}
+          {% set hpkwh = (states('sensor.Heizenergie_Teil_2_kWh') | float) %}
+        {% endif %}
+        {% if is_state('sensor.Heizenergie_Teil_1_MWh', 'unknown') %}
+          {% set hpMwh = 0.0 %}
+        {% else %}
+          {% set hpMwh = (states('sensor.Heizenergie_Teil_1_MWh') | float) %}
+        {% endif %}
+        {{ ((hpMwh*1000.0)+hpkwh) | round(1, default=0)  }}
+  - name: "Warmwasserenergie"
+    unique_id: web2com_Warmwasserenergie
+    device_class: "energy"
+    state_class: "total_increasing"
+    unit_of_measurement: kWh
+    state: >
+        {% if is_state('sensor.Warmwasserenergie_Teil_2_kWh', 'unknown') %}
+          {% set hpkwh = 0.0 %}
+        {% else %}
+          {% set hpkwh = (states('sensor.Warmwasserenergie_Teil_2_kWh') | float) %}
+        {% endif %}
+        {% if is_state('sensor.Warmwasserenergie_Teil_1_MWh', 'unknown') %}
+          {% set hpMwh = 0.0 %}
+        {% else %}
+          {% set hpMwh = (states('sensor.Warmwasserenergie_Teil_1_MWh') | float) %}
+        {% endif %}
+        {{ ((hpMwh*1000.0)+hpkwh) | round(1, default=0)  }}
+

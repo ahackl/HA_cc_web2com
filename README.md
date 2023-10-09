@@ -18,11 +18,13 @@ custom_components/web2com/service.yaml
 ```
 
 Copy "ochsner_web2com.yaml" to your configuration folder.
+Copy "ochsner_web2com_template.yaml" to your configuration folder.
 
 Add a link in you configuration.yaml file
 
 ```yaml
 web2com: !include ochsner_web2com.yaml
+template: !include ochsner_web2com_template.yaml
 ```
 
 Set a password in the secrets.yaml file
@@ -30,6 +32,10 @@ Set a password in the secrets.yaml file
 ```yaml
 web2com_password: your_password
 ```
+
+With the [climate_template](https://github.com/jcwillox/hass-template-climate/)
+it is possible to combine a sensor and a service to a climate integration.
+Look into the configuration.yaml file for an example.
 
 ## Configuration
 

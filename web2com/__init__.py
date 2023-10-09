@@ -17,9 +17,9 @@ _LOGGER = logging.getLogger(DOMAIN)
 def setup(hass, config):
     """Set up is called when Home Assistant is loading our component."""
 
-    def handle_heating(call):
+    def handle_NormalSetpointRoomTemperature(call):
         """Handle the service call."""
-        temperature = call.data.get("NormalSetpointRoomTemperature", "0")
+        temperature = call.data.get("temperature", "0")
         # _LOGGER.info(pformat(temperature))
 
         username = config[DOMAIN]["username"]
@@ -30,7 +30,7 @@ def setup(hass, config):
         result = w2c.set_value("/1/2/4/99/6", temperature)
         # _LOGGER.info(pformat(result))
 
-    hass.services.register(DOMAIN, "heating", handle_heating)
+    hass.services.register(DOMAIN, "heating", handle_NormalSetpointRoomTemperature)
 
     sensors = config[DOMAIN]["sensors"]
     for optional in sensors:
