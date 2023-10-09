@@ -35,7 +35,22 @@ web2com_password: your_password
 
 With the [climate_template](https://github.com/jcwillox/hass-template-climate/)
 it is possible to combine a sensor and a service to a climate integration.
-Look into the configuration.yaml file for an example.
+```yaml
+climate:
+  - platform: climate_template
+    name: RaumtemperaturSollwert
+    modes:
+      - "auto"
+    min_temp: 15
+    max_temp: 30
+    temp_step: 0.5
+    current_temperature_template: "{{states('sensor.Normal_Raumtemperatur_Heizbetrieb') }}"
+    set_temperature:
+      - service: web2com.heating
+        data:
+          temperature:  "{{ temperature }}"
+```
+
 
 ## Configuration
 
