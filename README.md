@@ -26,6 +26,13 @@ Add a link in you configuration.yaml file
 web2com: !include ochsner_web2com.yaml
 template: !include ochsner_web2com_template.yaml
 ```
+Set the user name and the ip number of the web2com server
+in the file ochsner_web2com.yaml
+
+```yaml
+ip_address: 192.168.188.50
+username: OEM
+```
 
 Set a password in the secrets.yaml file
 
