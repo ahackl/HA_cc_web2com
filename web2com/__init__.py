@@ -3,6 +3,7 @@ import logging
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers import discovery
 
 from pprint import pformat
 
@@ -37,7 +38,7 @@ def setup(hass, config):
         optional["username"] = config[DOMAIN]["username"]
         optional["password"] = config[DOMAIN]["password"]
         optional["ip_address"] = config[DOMAIN]["ip_address"]
-        hass.helpers.discovery.load_platform("sensor", DOMAIN, optional, config)
+        discovery.load_platform(hass, "sensor", DOMAIN, optional, config)
 
     # Return boolean to indicate that initialization was successful.
     return True
