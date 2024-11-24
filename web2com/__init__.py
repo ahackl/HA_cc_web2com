@@ -26,8 +26,15 @@ def setup(hass, config):
         username = config[DOMAIN]["username"]
         password = config[DOMAIN]["password"]
         ip_address = config[DOMAIN]["ip_address"]
+        
+        authentication = web2com.AUTH.DIGEST
+        try:
+            if config[DOMAIN]["authentication"] == "Basic":
+                authentication = web2com.AUTH.BASIC
+        except:
+            authentication = web2com.AUTH.DIGEST
 
-        w2c = web2com.Service(ip_address, username, password)
+        w2c = web2com.Service(ip_address, username, password, auth=authentication)
         result = w2c.set_value("/1/2/4/99/6", temperature)
         # _LOGGER.info(pformat(result))
 

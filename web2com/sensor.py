@@ -19,6 +19,7 @@ from homeassistant.const import (
     CONF_PASSWORD,
     CONF_USERNAME,
     CONF_IP_ADDRESS,
+    CONF_AUTHENTICATION,
     CONF_ID,
     CONF_UNIT_OF_MEASUREMENT,
     CONF_DEVICE_CLASS,
@@ -71,6 +72,13 @@ class ExampleSensor(SensorEntity):
         self._unique_id = discovery_info[CONF_UNIQUE_ID]
         self._scan_interval = discovery_info[CONF_SCAN_INTERVAL]
 
+        self._authentication = web2com.AUTH.DIGEST
+        try:
+            if discovery_info[CONF_AUTHENTICATION] == "Basic":
+                self._authentication = web2com.AUTH.BASIC
+        except:
+            self._authentication = web2com.AUTH.DIGEST
+
     @property
     def id(self) -> str:
         """Return the id of the sensor."""
@@ -111,6 +119,6 @@ class ExampleSensor(SensorEntity):
 
         This is the only method that should fetch new data for Home Assistant.
         """
-        w2c = web2com.Service(self._ip_address, self._username, self._password)
+        w2c = web2com.Service(self._ip_address, self._username, self._password, auth=self._authentication)
         result = w2c.get_value(self._id)
         self._state = result[1]

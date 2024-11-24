@@ -34,6 +34,19 @@ ip_address: 192.168.188.50
 username: OEM
 ```
 
+Optional:
+In the file ochsner_web2com.yaml the authentication method can be set.
+If the value is not set then Digest authentication will be used.
+
+```yaml
+authentication: Digest
+```
+or
+
+```yaml
+authentication: Basic
+```
+
 Set a password in the secrets.yaml file
 
 ```yaml

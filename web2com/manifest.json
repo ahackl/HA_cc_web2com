@@ -1,11 +1,11 @@
 {
     "domain": "web2com",
     "name": "Ochsner web2com",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "codeowners": [],
     "dependencies": [],
     "documentation": "https://github.com/ahackl/HA_cc_web2com",
     "integration_type": "hub",
     "iot_class": "local_polling",
-    "requirements": ["ochsner-web2com==0.1.6"]
+    "requirements": ["ochsner-web2com==0.1.7"]
 }

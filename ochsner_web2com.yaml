@@ -1,5 +1,6 @@
   ip_address: 192.168.188.50
   username: OEM
+  authentication: Digest
   password: !secret web2com_password
   sensors:
   - name: Heizenergie Teil 1 MWh
