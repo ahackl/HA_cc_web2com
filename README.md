@@ -135,3 +135,20 @@ Default paramter:
 | ----------- | --- |
 | eBus        | 1   |
 | device      | 2   |
+
+## Node-RED:
+
+Install "Node-RED" via "Add-ons"
+Check the Log section to be sure the server starts without errors.
+
+Install "Get HACS" via "Add-ons"
+Start the add-on to install HACS  
+
+Go to "Devices & services" and add the integration "HACS"
+Configure the HACS integration and add an GitHub acount.
+
+Go to "Devices & services" and add the integration "Node-RED Companion"
+
+Go to Node-RED and import the flow via the clipboard or the JSON "HA_web2com.json" file.
+Adapt the flow to your local setting.
+

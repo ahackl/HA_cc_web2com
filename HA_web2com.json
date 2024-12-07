@@ -1,0 +1,319 @@
+[
+    {
+        "id": "e2bc9e650b123bc0",
+        "type": "tab",
+        "label": "web2com Datalogger",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "4f3c723172886f41",
+        "type": "inject",
+        "z": "e2bc9e650b123bc0",
+        "name": "time interval",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "300",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 350,
+        "y": 180,
+        "wires": [
+            [
+                "03ac5231c413a72c"
+            ]
+        ]
+    },
+    {
+        "id": "37f4ea37498a72a0",
+        "type": "http request",
+        "z": "e2bc9e650b123bc0",
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://192.168.188.50/ws",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "digest",
+        "senderr": false,
+        "headers": [],
+        "x": 330,
+        "y": 420,
+        "wires": [
+            [
+                "4413502dca61c73f"
+            ]
+        ]
+    },
+    {
+        "id": "03ac5231c413a72c",
+        "type": "function",
+        "z": "e2bc9e650b123bc0",
+        "name": "parameter list",
+        "func": "var msgList = [];\n\nvar commandList = {\n    \"web2com/outdoor_temperature\": \"1/2/4/119/1\"\n};\n\nvar count = Object.keys(commandList).length;\n\nfor (var i = 0; i < count; i++) {\n    var firstKey = Object.keys(commandList)[i];\n    var firstValue = commandList[firstKey];\n    var outputMsg = {\n        \"commandName\": firstKey,\n        \"commandId\": firstValue\n    };\n    msgList.push({ payload: outputMsg })\n}\nreturn [msgList];",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 240,
+        "wires": [
+            [
+                "17cb6fba20789a85"
+            ]
+        ]
+    },
+    {
+        "id": "17cb6fba20789a85",
+        "type": "delay",
+        "z": "e2bc9e650b123bc0",
+        "name": "",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "5",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 340,
+        "y": 300,
+        "wires": [
+            [
+                "79360537c1cf1d9b"
+            ]
+        ]
+    },
+    {
+        "id": "79360537c1cf1d9b",
+        "type": "function",
+        "z": "e2bc9e650b123bc0",
+        "name": "SOAP XML (read)",
+        "func": "msg.commandId = msg.payload.commandId;\nmsg.commandName = msg.payload.commandName;\n\nmsg.headers = {};\nmsg.headers = {\n    'Content-Type': 'text/xml'\n};\n\nmsg.payload = '<?xml version=\"1.0\" encoding=\"UTF-8\"?>' + '\\n'\nmsg.payload += '<SOAP-ENV:Envelope' + '\\n'\nmsg.payload += 'xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\"' + '\\n'\nmsg.payload += 'xmlns:SOAP-ENC=\"http://schemas.xmlsoap.org/soap/encoding/\"' + '\\n'\nmsg.payload += 'xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"' + '\\n'\nmsg.payload += 'xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"' + '\\n'\nmsg.payload += 'xmlns:ns=\"http://ws01.lom.ch/soap/\">' + '\\n'\nmsg.payload += '<SOAP-ENV:Body>' + '\\n'\nmsg.payload += '<ns:getDpRequest>' + '\\n'\nmsg.payload += '<ref>' + '\\n'\nmsg.payload += '<oid>' + msg.commandId + '</oid>' + '\\n'\nmsg.payload += '<prop/>' + '\\n'\nmsg.payload += '</ref>' + '\\n'\nmsg.payload += '<startIndex>0</startIndex>' + '\\n'\nmsg.payload += '<count>20</count>' + '\\n'\nmsg.payload += '</ns:getDpRequest>' + '\\n'\nmsg.payload += '</SOAP-ENV:Body>' + '\\n';\nmsg.payload += '</SOAP-ENV:Envelope>' + '\\n';\n\n\nreturn msg",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 360,
+        "wires": [
+            [
+                "37f4ea37498a72a0"
+            ]
+        ]
+    },
+    {
+        "id": "4413502dca61c73f",
+        "type": "xml",
+        "z": "e2bc9e650b123bc0",
+        "name": "",
+        "property": "payload",
+        "attr": "",
+        "chr": "",
+        "x": 330,
+        "y": 480,
+        "wires": [
+            [
+                "b44014260e9e60ba"
+            ]
+        ]
+    },
+    {
+        "id": "b44014260e9e60ba",
+        "type": "function",
+        "z": "e2bc9e650b123bc0",
+        "name": "Extract value",
+        "func": "var payload = msg.payload;\nvar commandName = msg.commandName;\n\nvar NewMsg = {};\nNewMsg.topic = commandName;\nNewMsg.payload = Number(payload[\"SOAP-ENV:Envelope\"][\"SOAP-ENV:Body\"][0][\"ns:getDpResponse\"][0].dpCfg[0].value[0]);\nreturn NewMsg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 330,
+        "y": 540,
+        "wires": [
+            [
+                "1b32d3674a869516"
+            ]
+        ]
+    },
+    {
+        "id": "91ce6ff1f027ff27",
+        "type": "comment",
+        "z": "e2bc9e650b123bc0",
+        "name": "time interval",
+        "info": "# time interval\nDefine the time interval to repeat the list of parameters.\nBe sure that the number of parameters\ncan be processed in the time frame,\nwhich is set with the limiter.",
+        "x": 550,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "c68e14d549ae3b16",
+        "type": "comment",
+        "z": "e2bc9e650b123bc0",
+        "name": "parameter list",
+        "info": "# parameter list\nThe parameter list translate the ioBroker names to web2com IDs.\nFor example, the value for the object \"heat_pipe_status\" in the subfolder \"web2com\"\nof the node-red folder will be mapped to the ID \"/1/2/1/125/0\".\n`\"web2com/heat_pipe_status\": \"/1/2/1/125/0\"`\nRemove or add lines, depending on your local needs.\nYou can find the IDs (numbers in brackets before each value) \nin the web2com user interface.\nBe sure that the line ends with a comma, \nbut not the last line in the list.",
+        "x": 550,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "b76b2416e5439d79",
+        "type": "comment",
+        "z": "e2bc9e650b123bc0",
+        "name": "limiter",
+        "info": "# limiter\nUse the limiter, to limit the number of request per seconds\nto avoid an overload of the web2com interface.",
+        "x": 530,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "cd88b7951ba40ca9",
+        "type": "comment",
+        "z": "e2bc9e650b123bc0",
+        "name": "SOAP XML",
+        "info": "# SOAP XML\nThe node embeds the ID into a SOAP XML for the web2com interface.",
+        "x": 540,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "2d43f04f044cc912",
+        "type": "comment",
+        "z": "e2bc9e650b123bc0",
+        "name": "http request",
+        "info": "# http request\nSend an HTTP request to the web2com interface.\nSet the IP number, username and password for local needs.\nDepending on the software revision of the web2com interface\nyou must adapt the authentication method.\nThis can be \"Basic\" or \"Digest\".",
+        "x": 550,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "cc0a5c724f235de4",
+        "type": "comment",
+        "z": "e2bc9e650b123bc0",
+        "name": "xml",
+        "info": "# xml\nConvert the HTTP result in an XML structure.",
+        "x": 530,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "7ca80c057ba3e729",
+        "type": "comment",
+        "z": "e2bc9e650b123bc0",
+        "name": "Extract value",
+        "info": "# Extract value\nExtract the result value from the XML structure.",
+        "x": 550,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "6b093d314e5013d0",
+        "type": "comment",
+        "z": "e2bc9e650b123bc0",
+        "name": "The user of this interface is responsible not to damage the heat pump with misleading parameters. ",
+        "info": "",
+        "x": 440,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "1b32d3674a869516",
+        "type": "ha-sensor",
+        "z": "e2bc9e650b123bc0",
+        "name": "web2com.temp",
+        "entityConfig": "5f15ef890cb517a5",
+        "version": 0,
+        "state": "payload",
+        "stateType": "msg",
+        "attributes": [],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 340,
+        "y": 600,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "19e01849cfeb15f1",
+        "type": "comment",
+        "z": "e2bc9e650b123bc0",
+        "name": "HA sensor",
+        "info": "# HA sensor\nProvide the data as HA sensor\n",
+        "x": 540,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "5f15ef890cb517a5",
+        "type": "ha-entity-config",
+        "server": "2d2d1749.f7d068",
+        "deviceConfig": "",
+        "name": "outdoor_temperature",
+        "version": "6",
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "outdoor temperature"
+            },
+            {
+                "property": "icon",
+                "value": "mdi:thermometer"
+            },
+            {
+                "property": "entity_picture",
+                "value": ""
+            },
+            {
+                "property": "entity_category",
+                "value": "diagnostic"
+            },
+            {
+                "property": "device_class",
+                "value": "temperature"
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "°C"
+            },
+            {
+                "property": "state_class",
+                "value": "measurement"
+            }
+        ],
+        "resend": false,
+        "debugEnabled": false
+    },
+    {
+        "id": "2d2d1749.f7d068",
+        "type": "server",
+        "name": "Home Assistant",
+        "addon": true
+    }
+]
