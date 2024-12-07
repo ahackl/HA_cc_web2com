@@ -1,0 +1,188 @@
+[
+    {
+        "id": "14ae91a9cc94e76b",
+        "type": "subflow",
+        "name": "web2com",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 60,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "17cb6fba20789a85"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 380,
+                "y": 320,
+                "wires": [
+                    {
+                        "id": "b44014260e9e60ba",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#DDAA99"
+    },
+    {
+        "id": "b76b2416e5439d79",
+        "type": "comment",
+        "z": "14ae91a9cc94e76b",
+        "name": "limiter",
+        "info": "# limiter\nUse the limiter, to limit the number of request per seconds\nto avoid an overload of the web2com interface.",
+        "x": 470,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "cd88b7951ba40ca9",
+        "type": "comment",
+        "z": "14ae91a9cc94e76b",
+        "name": "SOAP XML",
+        "info": "# SOAP XML\nThe node embeds the ID into a SOAP XML for the web2com interface.",
+        "x": 480,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "2d43f04f044cc912",
+        "type": "comment",
+        "z": "14ae91a9cc94e76b",
+        "name": "http request",
+        "info": "# http request\nSend an HTTP request to the web2com interface.\nSet the IP number, username and password for local needs.\nDepending on the software revision of the web2com interface\nyou must adapt the authentication method.\nThis can be \"Basic\" or \"Digest\".",
+        "x": 490,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "cc0a5c724f235de4",
+        "type": "comment",
+        "z": "14ae91a9cc94e76b",
+        "name": "xml",
+        "info": "# xml\nConvert the HTTP result in an XML structure.",
+        "x": 470,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "7ca80c057ba3e729",
+        "type": "comment",
+        "z": "14ae91a9cc94e76b",
+        "name": "Extract value",
+        "info": "# Extract value\nExtract the result value from the XML structure.",
+        "x": 490,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "17cb6fba20789a85",
+        "type": "delay",
+        "z": "14ae91a9cc94e76b",
+        "name": "",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "5",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 240,
+        "y": 80,
+        "wires": [
+            [
+                "79360537c1cf1d9b"
+            ]
+        ]
+    },
+    {
+        "id": "79360537c1cf1d9b",
+        "type": "function",
+        "z": "14ae91a9cc94e76b",
+        "name": "SOAP XML (read)",
+        "func": "msg.commandId = msg.payload.commandId;\nmsg.commandName = msg.payload.commandName;\n\nmsg.headers = {};\nmsg.headers = {\n    'Content-Type': 'text/xml'\n};\n\nmsg.payload = '<?xml version=\"1.0\" encoding=\"UTF-8\"?>' + '\\n'\nmsg.payload += '<SOAP-ENV:Envelope' + '\\n'\nmsg.payload += 'xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\"' + '\\n'\nmsg.payload += 'xmlns:SOAP-ENC=\"http://schemas.xmlsoap.org/soap/encoding/\"' + '\\n'\nmsg.payload += 'xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"' + '\\n'\nmsg.payload += 'xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"' + '\\n'\nmsg.payload += 'xmlns:ns=\"http://ws01.lom.ch/soap/\">' + '\\n'\nmsg.payload += '<SOAP-ENV:Body>' + '\\n'\nmsg.payload += '<ns:getDpRequest>' + '\\n'\nmsg.payload += '<ref>' + '\\n'\nmsg.payload += '<oid>' + msg.commandId + '</oid>' + '\\n'\nmsg.payload += '<prop/>' + '\\n'\nmsg.payload += '</ref>' + '\\n'\nmsg.payload += '<startIndex>0</startIndex>' + '\\n'\nmsg.payload += '<count>20</count>' + '\\n'\nmsg.payload += '</ns:getDpRequest>' + '\\n'\nmsg.payload += '</SOAP-ENV:Body>' + '\\n';\nmsg.payload += '</SOAP-ENV:Envelope>' + '\\n';\n\n\nreturn msg",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 250,
+        "y": 140,
+        "wires": [
+            [
+                "37f4ea37498a72a0"
+            ]
+        ]
+    },
+    {
+        "id": "37f4ea37498a72a0",
+        "type": "http request",
+        "z": "14ae91a9cc94e76b",
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://192.168.188.50/ws",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "digest",
+        "senderr": false,
+        "headers": [],
+        "x": 230,
+        "y": 200,
+        "wires": [
+            [
+                "4413502dca61c73f"
+            ]
+        ]
+    },
+    {
+        "id": "4413502dca61c73f",
+        "type": "xml",
+        "z": "14ae91a9cc94e76b",
+        "name": "",
+        "property": "payload",
+        "attr": "",
+        "chr": "",
+        "x": 230,
+        "y": 260,
+        "wires": [
+            [
+                "b44014260e9e60ba"
+            ]
+        ]
+    },
+    {
+        "id": "b44014260e9e60ba",
+        "type": "function",
+        "z": "14ae91a9cc94e76b",
+        "name": "Extract value",
+        "func": "var payload = msg.payload;\nvar commandName = msg.commandName;\n\nvar NewMsg = {};\nNewMsg.topic = commandName;\nNewMsg.payload = Number(payload[\"SOAP-ENV:Envelope\"][\"SOAP-ENV:Body\"][0][\"ns:getDpResponse\"][0].dpCfg[0].value[0]);\nreturn NewMsg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 230,
+        "y": 320,
+        "wires": [
+            []
+        ]
+    }
+]
